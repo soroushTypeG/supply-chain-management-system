@@ -39,7 +39,7 @@ System interaction mapping across different administrative and operational actor
    ```bash
    git clone [https://github.com/soroshTypeG/supply-chain-management-system.git](https://github.com/soroshTypeG/supply-chain-management-system.git)
    cd supply-chain-management-system
-    
+```
 
 **Install dependencies:**
 
@@ -48,6 +48,13 @@ pip install -r requirements.txt
 ```
 
 **Run the application:**
+
+Before running the app.py first you got to run the seed.py script:
+```bash
+python seed.py
+```
+
+Then:
 ```bash
 python app.py
 ```
@@ -78,6 +85,13 @@ python app.py
 pip install -r requirements.txt
 ```
 **۳. اجرای برنامه:**
+
+قبل از اجرای برنامه باید اول اسکریپت seed.py را اجرا کنید:
+```bash
+python seed.py
+```
+
+بعد:
 ```bash
 python app.py
 ```
