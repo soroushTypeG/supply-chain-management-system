@@ -1,6 +1,15 @@
 from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
 
 db = SQLAlchemy()
+
+class User(db.Model):
+    __tablename__ = 'users'
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(80), unique=True, nullable=False)
+    password_hash = db.Column(db.String(200), nullable=False)
+    role = db.Column(db.String(50), nullable=False)  # Admin, Manager, Operator, Supplier
+    transactions = db.relationship('Transaction', backref='user', lazy=True)
 
 class Supplier(db.Model):
     __tablename__ = 'suppliers'
@@ -31,3 +40,13 @@ class Stock(db.Model):
     product_id = db.Column(db.Integer, db.ForeignKey('products.id'), nullable=False)
     warehouse_id = db.Column(db.Integer, db.ForeignKey('warehouses.id'), nullable=False)
     quantity = db.Column(db.Integer, nullable=False, default=0)
+
+class Transaction(db.Model):
+    __tablename__ = 'transactions'
+    id = db.Column(db.Integer, primary_key=True)
+    product_id = db.Column(db.Integer, db.ForeignKey('products.id'), nullable=False)
+    warehouse_id = db.Column(db.Integer, db.ForeignKey('warehouses.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    change_amount = db.Column(db.Integer, nullable=False)  # Positive for IN, Negative for OUT
+    transaction_type = db.Column(db.String(20), nullable=False)  # INBOUND, OUTBOUND
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
