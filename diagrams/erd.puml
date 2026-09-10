@@ -1,0 +1,60 @@
+@startuml
+skinparam linetype ortho
+
+entity "User" as user {
+    + id : INT
+    --
+    username : VARCHAR
+    password_hash : VARCHAR
+    role : VARCHAR
+}
+
+entity "Supplier" as supplier {
+    + id : INT
+    --
+    name : VARCHAR
+    contact_info : VARCHAR
+}
+
+entity "Warehouse" as warehouse {
+    + id : INT
+    --
+    location : VARCHAR
+    capacity : INT
+}
+
+entity "Product" as product {
+    + id : INT
+    --
+    name : VARCHAR
+    sku : VARCHAR
+    price : FLOAT
+    supplier_id : INT
+}
+
+entity "Stock" as stock {
+    + id : INT
+    --
+    product_id : INT
+    warehouse_id : INT
+    quantity : INT
+}
+
+entity "Transaction" as transaction {
+    + id : INT
+    --
+    product_id : INT
+    warehouse_id : INT
+    user_id : INT
+    change_amount : INT
+    transaction_type : VARCHAR
+    timestamp : DATETIME
+}
+
+supplier ||--o{ product : supplies
+warehouse ||--o{ stock : stores
+product ||--o{ stock : contains
+user ||--o{ transaction : executes
+product ||--o{ transaction : logs
+warehouse ||--o{ transaction : records
+@enduml
