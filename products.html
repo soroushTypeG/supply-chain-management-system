@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>لیست کالاها</title>
+</head>
+<body>
+    <h1>مدیریت کالاها</h1>
+    <a href="/">بازگشت به داشبورد</a>
+    <hr>
+    <ul>
+        {% for product in products %}
+            <li>{{ product.name }} - SKU: {{ product.sku }} - قیمت: {{ product.price }}</li>
+        {% else %}
+            <li>هیچ کالایی ثبت نشده است.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
