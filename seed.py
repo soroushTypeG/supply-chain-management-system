@@ -1,0 +1,61 @@
+from app import app, db
+from models import User, Supplier, Warehouse, Product, Stock, Transaction
+
+def seed_database():
+    with app.app_context():
+        # Clear existing data and create fresh tables
+        db.drop_all()
+        db.create_all()
+
+        print("Database tables created.")
+
+        # Create sample user accounts with specific roles
+        admin = User(username="admin", password_hash="hashed_pass_1", role="Admin")
+        operator = User(username="operator1", password_hash="hashed_pass_2", role="Operator")
+        db.session.add_all([admin, operator])
+
+        # Create sample suppliers
+        supplier1 = Supplier(name="TechCorp Industries", contact_info="Tehran, Iran")
+        supplier2 = Supplier(name="Global Logistics Co.", contact_info="Shiraz, Iran")
+        db.session.add_all([supplier1, supplier2])
+
+        # Create sample warehouses with capacity constraints
+        warehouse1 = Warehouse(location="Central Warehouse - Tehran", capacity=5000)
+        warehouse2 = Warehouse(location="North Warehouse - Karaj", capacity=3000)
+        db.session.add_all([warehouse1, warehouse2])
+
+        db.session.commit()
+
+        # Create sample products mapped to suppliers
+        product1 = Product(name="Industrial Server Rack", sku="SRV-001", price=1200.0, supplier_id=supplier1.id)
+        product2 = Product(name="Network Switch 24-Port", sku="SW-24-02", price=450.0, supplier_id=supplier2.id)
+        db.session.add_all([product1, product2])
+        db.session.commit()
+
+        # Register initial stock levels across warehouses
+        stock1 = Stock(product_id=product1.id, warehouse_id=warehouse1.id, quantity=50)
+        stock2 = Stock(product_id=product2.id, warehouse_id=warehouse2.id, quantity=120)
+        db.session.add_all([stock1, stock2])
+
+        # Log initial inbound audit transactions
+        tx1 = Transaction(
+            product_id=product1.id, 
+            warehouse_id=warehouse1.id, 
+            user_id=admin.id, 
+            change_amount=50, 
+            transaction_type="INBOUND"
+        )
+        tx2 = Transaction(
+            product_id=product2.id, 
+            warehouse_id=warehouse2.id, 
+            user_id=operator.id, 
+            change_amount=120, 
+            transaction_type="INBOUND"
+        )
+        db.session.add_all([tx1, tx2])
+        
+        db.session.commit()
+        print("Database seeded successfully with enterprise test data!")
+
+if __name__ == '__main__':
+    seed_database()
