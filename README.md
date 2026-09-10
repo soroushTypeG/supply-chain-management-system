@@ -35,7 +35,7 @@ System interaction mapping across different administrative and operational actor
 
 ## Installation and Setup
 
-1. Clone the repository:
+**1. Clone the repository:**
    ```bash
    git clone [https://github.com/soroshTypeG/supply-chain-management-system.git](https://github.com/soroshTypeG/supply-chain-management-system.git)
    cd supply-chain-management-system
@@ -50,4 +50,34 @@ pip install -r requirements.txt
 **Run the application:**
 ```bash
 python app.py
-   
+```
+
+
+
+
+---
+
+## راهنمای فارسی (Persian Overview)
+
+سامانه سازمانی مدیریت انبار و زنجیره تأمین یک برنامه تحت وب پیشرفته است که با پایتون (Flask) و SQLAlchemy برای ردیابی لحظه‌ای موجودی، مدیریت انبارهای متعدد و کنترل دسترسی نقش‌محور (RBAC) توسعه یافته است.
+
+### ماژول‌های اصلی
+- **کنترل دسترسی (RBAC):** مدیریت امن سطوح دسترسی برای مدیران، انبارداران، اپراتورهای لجستیک و تأمین‌کنندگان.
+- **ردیابی موجودی:** به‌روزرسانی خودکار موجودی به همراه ثبت دقیق تاریخچه تراکنش‌ها.
+- **مدیریت انبارها:** پایش ظرفیت مکانی و تخصیص کالا به انبارها.
+
+### نصب و راه‌اندازی سریع
+۱. کلون کردن مخزن:
+   ```bash
+   git clone [https://github.com/soroshTypeG/supply-chain-management-system.git](https://github.com/soroshTypeG/supply-chain-management-system.git)
+   cd supply-chain-management-system
+```
+
+**۲. نصب پکیج‌های مورد نیاز:**
+```bash
+pip install -r requirements.txt
+```
+**۳. اجرای برنامه:**
+```bash
+python app.py
+```
