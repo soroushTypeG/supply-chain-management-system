@@ -1,19 +1,42 @@
-<!DOCTYPE html>
-<html lang="fa" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <title>لیست کالاها</title>
-</head>
-<body>
-    <h1>مدیریت کالاها</h1>
-    <a href="/">بازگشت به داشبورد</a>
-    <hr>
-    <ul>
-        {% for product in products %}
-            <li>{{ product.name }} - SKU: {{ product.sku }} - قیمت: {{ product.price }}</li>
-        {% else %}
-            <li>هیچ کالایی ثبت نشده است.</li>
-        {% endfor %}
-    </ul>
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block title %}مدیریت کالاها{% endblock %}
+{% block header_title %}لیست کالاهای موجود در انبار{% endblock %}
+
+{% block content %}
+<div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
+    <div class="p-6 border-b border-slate-100 flex justify-between items-center">
+        <h3 class="text-lg font-bold text-slate-800">اطلاعات کالاها</h3>
+        <a href="/" class="text-sm text-indigo-600 hover:text-indigo-800 font-medium">
+            <i class="fa-solid fa-arrow-right ml-1"></i> بازگشت به داشبورد
+        </a>
+    </div>
+    
+    <div class="overflow-x-auto">
+        <table class="w-full text-right border-collapse">
+            <thead>
+                <tr class="bg-slate-50 text-slate-600 text-sm border-b border-slate-100">
+                    <th class="p-4 font-semibold">نام کالا</th>
+                    <th class="p-4 font-semibold">شناسه (SKU)</th>
+                    <th class="p-4 font-semibold">قیمت (تومان)</th>
+                    <th class="p-4 font-semibold">تأمین‌کننده</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 text-sm text-slate-700">
+                {% for product in products %}
+                <tr class="hover:bg-slate-50 transition">
+                    <td class="p-4 font-medium text-slate-800">{{ product.name }}</td>
+                    <td class="p-4"><span class="bg-slate-100 text-slate-800 px-2.5 py-1 rounded-md text-xs font-mono">{{ product.sku }}</span></td>
+                    <td class="p-4">{{ product.price }}</td>
+                    <td class="p-4">{{ product.supplier.name if product.supplier else 'متفرقه' }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="4" class="p-8 text-center text-slate-400">هیچ کالایی در دیتابیس ثبت نشده است.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
