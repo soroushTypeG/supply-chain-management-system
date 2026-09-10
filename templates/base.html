@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}سامانه انبارداری{% endblock %}</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-50 font-sans">
+
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar -->
+        <div class="hidden md:flex md:flex-shrink-0">
+            <div class="flex flex-col w-64 bg-slate-900 text-white">
+                <div class="flex items-center justify-center h-16 bg-slate-800 px-4">
+                    <h1 class="text-lg font-bold">سامانه سازمانی انبار</h1>
+                </div>
+                <div class="flex flex-col flex-grow px-4 py-6 space-y-2">
+                    <a href="/" class="flex items-center px-4 py-2.5 text-sm font-medium rounded-lg {% if request.path == '/' %}bg-indigo-600 text-white{% else %}text-slate-300 hover:bg-slate-800 hover:text-white{% endif %}">
+                        <i class="fa-solid fa-chart-pie ml-3"></i> داشبورد
+                    </a>
+                    <a href="/products" class="flex items-center px-4 py-2.5 text-sm font-medium rounded-lg {% if request.path == '/products' %}bg-indigo-600 text-white{% else %}text-slate-300 hover:bg-slate-800 hover:text-white{% endif %}">
+                        <i class="fa-solid fa-boxes-stacked ml-3"></i> مدیریت کالاها
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="flex flex-col flex-1 overflow-y-auto">
+            <header class="bg-white shadow-sm h-16 flex items-center justify-between px-8">
+                <h2 class="text-xl font-bold text-slate-800">{% block header_title %}مدیریت{% endblock %}</h2>
+                <span class="text-sm bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full font-medium">وضعیت سیستم: عملیاتی</span>
+            </header>
+
+            <main class="p-8">
+                {% block content %}{% endblock %}
+            </main>
+        </div>
+    </div>
+
+</body>
+</html>
