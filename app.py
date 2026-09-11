@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, flash, redirect, url_for
 from models import db, User, Product, Warehouse, Supplier, Stock, Transaction
 from models import db, User, Product, Warehouse, Supplier, Stock, Transaction, Vehicle, Driver, ShipmentRoute
 
@@ -29,6 +29,39 @@ def dashboard():
     )
 
 
+@app.route('/products/add', methods=['GET', 'POST'])
+def add_product():
+    if request.method == 'POST':
+        name = request.form.get('name')
+        sku = request.form.get('sku')
+        price = float(request.form.get('price'))
+        supplier_id = int(request.form.get('supplier_id'))
+
+        new_product = Product(name=name, sku=sku, price=price, supplier_id=supplier_id)
+        db.session.add(new_product)
+        db.session.commit()
+        return redirect(url_for('list_products'))
+
+    suppliers = Supplier.query.all()
+    return render_template('add_product.html', suppliers=suppliers)
+
+
+@app.route('/vehicles/add', methods=['GET', 'POST'])
+def add_vehicle():
+    if request.method == 'POST':
+        plate_number = request.form.get('plate_number')
+        model_name = request.form.get('model_name')
+        capacity_kg = float(request.form.get('capacity_kg'))
+        status = request.form.get('status', 'Available')
+
+        new_vehicle = Vehicle(plate_number=plate_number, model_name=model_name, capacity_kg=capacity_kg, status=status)
+        db.session.add(new_vehicle)
+        db.session.commit()
+        return redirect(url_for('list_vehicles'))
+
+    return render_template('add_vehicle.html')
+
+
 @app.route('/products')
 def list_products():
     products = Product.query.all()
@@ -57,10 +90,10 @@ def reports():
     total_drivers = Driver.query.count()
     total_routes = ShipmentRoute.query.count()
     total_transactions = Transaction.query.count()
-    
+
     stocks = Stock.query.all()
     total_inventory_value = sum([stock.quantity * stock.product.price for stock in stocks])
-    
+
     recent_transactions = Transaction.query.order_by(Transaction.id.desc()).all()
 
     return render_template(
