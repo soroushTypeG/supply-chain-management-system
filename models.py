@@ -50,3 +50,31 @@ class Transaction(db.Model):
     change_amount = db.Column(db.Integer, nullable=False)  # Positive for IN, Negative for OUT
     transaction_type = db.Column(db.String(20), nullable=False)  # INBOUND, OUTBOUND
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+
+class Vehicle(db.Model):
+    __tablename__ = 'vehicles'
+    id = db.Column(db.Integer, primary_key=True)
+    plate_number = db.Column(db.String(20), unique=True, nullable=False)
+    model_name = db.Column(db.String(50), nullable=False)
+    capacity_kg = db.Column(db.Float, nullable=False)
+    status = db.Column(db.String(20), default="Available") # Available, In-Transit, Maintenance
+
+class Driver(db.Model):
+    __tablename__ = 'drivers'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    license_number = db.Column(db.String(50), unique=True, nullable=False)
+    phone = db.Column(db.String(20), nullable=False)
+    status = db.Column(db.String(20), default="Active")
+
+class ShipmentRoute(db.Model):
+    __tablename__ = 'shipment_routes'
+    id = db.Column(db.Integer, primary_key=True)
+    origin = db.Column(db.String(100), nullable=False)
+    destination = db.Column(db.String(100), nullable=False)
+    vehicle_id = db.Column(db.Integer, db.ForeignKey('vehicles.id'), nullable=False)
+    driver_id = db.Column(db.Integer, db.ForeignKey('drivers.id'), nullable=False)
+    status = db.Column(db.String(20), default="Pending") # Pending, Dispatched, Delivered
+    
+    vehicle = db.relationship('Vehicle', backref=db.backref('routes', lazy=True))
+    driver = db.relationship('Driver', backref=db.backref('routes', lazy=True))
