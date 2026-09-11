@@ -1,6 +1,9 @@
 from flask import Flask, render_template, request, flash, redirect, url_for
 from models import db, User, Product, Warehouse, Supplier, Stock, Transaction
 from models import db, User, Product, Warehouse, Supplier, Stock, Transaction, Vehicle, Driver, ShipmentRoute
+import io
+import pandas as pd
+from flask import send_file
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///enterprise_supply_chain.db'
@@ -26,6 +29,40 @@ def dashboard():
         total_suppliers=total_suppliers,
         t_count=transactions_count,
         transactions=recent_transactions
+    )
+
+
+@app.route('/reports/export/excel')
+def export_excel():
+    # Fetch stock and product data joined together
+    stocks = Stock.query.all()
+
+    data = []
+    for s in stocks:
+        data.append({
+            'کد کالا (SKU)': s.product.sku if s.product else '',
+            'نام کالا': s.product.name if s.product else '',
+            'دسته‌بندی': getattr(s.product, 'category', 'عمومی'),
+            'انبار': s.warehouse.location if s.warehouse else '',
+            'موجودی فعلی': s.quantity,
+            'قیمت واحد (تومان)': s.product.price if s.product else 0,
+            'ارزش کل (تومان)': s.quantity * (s.product.price if s.product else 0)
+        })
+
+    df = pd.DataFrame(data)
+
+    # Create an in-memory output buffer for the Excel file
+    output = io.BytesIO()
+    with pd.ExcelWriter(output, engine='openpyxl') as writer:
+        df.to_excel(writer, index=False, sheet_name='Inventory Report')
+
+    output.seek(0)
+
+    return send_file(
+        output,
+        mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        as_attachment=True,
+        download_name='supply_chain_inventory_report.xlsx'
     )
 
 
