@@ -111,8 +111,22 @@ def add_transaction():
 
 @app.route('/products')
 def list_products():
-    products = Product.query.all()
-    return render_template('products.html', products=products)
+    # Get the search query parameter from the URL if it exists
+    search_query = request.args.get('q', '').strip()
+
+    if search_query:
+        # Filter products by name or SKU matching the search query
+        products_list = Product.query.filter(
+            db.or_(
+                Product.name.ilike(f'%{search_query}%'),
+                Product.sku.ilike(f'%{search_query}%')
+            )
+        ).all()
+    else:
+        # Fetch all products if no search query is provided
+        products_list = Product.query.all()
+
+    return render_template('products.html', products=products_list, search_query=search_query)
 
 
 @app.route('/vehicles')
