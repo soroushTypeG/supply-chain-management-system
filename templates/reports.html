@@ -41,13 +41,23 @@
 
 <!-- Detailed Audit Trail Table -->
 <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
-    <div class="p-6 border-b border-slate-100 flex justify-between items-center">
-        <h3 class="text-lg font-bold text-slate-800"><i class="fa-solid fa-shield-halved text-indigo-600 ml-2"></i> تاریخچه ممیزی و تراکنش‌های انبار (Audit Trail)</h3>
-        <a href="/transactions/add" class="inline-flex items-center px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition">
-            <i class="fa-solid fa-plus ml-2"></i> ثبت تراکنش جدید
-        </a>
+    <div class="p-6 border-b border-slate-100 flex flex-col md:flex-row justify-between items-center gap-4">
+        <!-- Title & Description (Right side in RTL) -->
+        <h3 class="text-lg font-bold text-slate-800 flex items-center">
+            <i class="fa-solid fa-shield-halved text-indigo-600 ml-2"></i> تاریخچه ممیزی و تراکنش‌های انبار (Audit Trail)
+        </h3>
+
+        <!-- Action Buttons Group (Left side in RTL) -->
+        <div class="flex items-center gap-3">
+            <a href="/transactions/add" class="inline-flex items-center px-3 py-1.5 bg-indigo-600 text-white text-xs font-medium rounded-lg hover:bg-indigo-700 transition shadow-sm whitespace-nowrap">
+                <i class="fa-solid fa-plus ml-1.5"></i> ثبت تراکنش جدید
+            </a>
+            <a href="/reports/export/excel" class="inline-flex items-center px-3 py-1.5 bg-emerald-600 text-white text-xs font-medium rounded-lg hover:bg-emerald-700 transition shadow-sm whitespace-nowrap">
+                <i class="fa-solid fa-file-excel ml-1.5"></i> دانلود گزارش اکسل
+            </a>
+        </div>
     </div>
-    
+
     <div class="overflow-x-auto">
         <table class="w-full text-right border-collapse text-sm">
             <thead>
@@ -62,7 +72,7 @@
             <tbody class="divide-y divide-slate-100 text-slate-700">
                 {% for tx in transactions %}
                 <tr class="hover:bg-slate-50 transition">
-                    <td class="p-4 font-mono text-xs">#TX-{{ tx.id }}</td>
+                    <td class="p-4 font-mono text-xs" dir="ltr">#TX-{{ tx.id }}</td>
                     <td class="p-4 font-medium text-slate-800">{{ tx.product.name if tx.product else 'کالای نامشخص' }}</td>
                     <td class="p-4">{{ tx.warehouse.location if tx.warehouse else 'انبار عمومی' }}</td>
                     <td class="p-4">
