@@ -32,6 +32,23 @@ def seed_database():
         db.session.add_all([product1, product2])
         db.session.commit()
 
+
+        # Create sample vehicles
+        vehicle1 = Vehicle(plate_number="12الف345-تهران", model_name="ایفکو تن چرخ", capacity_kg=10000.0, status="Available")
+        vehicle2 = Vehicle(plate_number="88ب991-ایران11", model_name="نیسان زامیاد", capacity_kg=2000.0, status="In-Transit")
+        db.session.add_all([vehicle1, vehicle2])
+
+        # Create sample drivers
+        driver1 = Driver(name="رضا حامی", license_number="DL-987654", phone="09123456789", status="Active")
+        driver2 = Driver(name="امین باقری", license_number="DL-123456", phone="09198765432", status="Active")
+        db.session.add_all([driver1, driver2])
+        db.session.commit()
+
+        # Create sample route
+        route1 = ShipmentRoute(origin="انبار مرکزی تهران", destination="انبار منطقه شمال", vehicle_id=vehicle2.id, driver_id=driver1.id, status="Dispatched")
+        db.session.add(route1)
+        db.session.commit()
+
         # Register initial stock levels across warehouses
         stock1 = Stock(product_id=product1.id, warehouse_id=warehouse1.id, quantity=50)
         stock2 = Stock(product_id=product2.id, warehouse_id=warehouse2.id, quantity=120)
