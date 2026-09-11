@@ -62,6 +62,53 @@ def add_vehicle():
     return render_template('add_vehicle.html')
 
 
+@app.route('/transactions/add', methods=['GET', 'POST'])
+def add_transaction():
+    if request.method == 'POST':
+        product_id = int(request.form.get('product_id'))
+        warehouse_id = int(request.form.get('warehouse_id'))
+        change_amount = int(request.form.get('change_amount'))
+        transaction_type = request.form.get('transaction_type')  # 'INBOUND' or 'OUTBOUND'
+
+        # If transaction type is outbound, negate the change amount
+        actual_change = change_amount if transaction_type == 'INBOUND' else -change_amount
+
+        # Validate warehouse stock availability for outbound operations
+        if transaction_type == 'OUTBOUND':
+            stock_record = Stock.query.filter_by(product_id=product_id, warehouse_id=warehouse_id).first()
+            current_qty = stock_record.quantity if stock_record else 0
+            if current_qty < change_amount:
+                return "Error: Insufficient stock in warehouse for this outbound quantity!", 400
+
+        # 1. Register the transaction in the audit trail (Transaction table)
+        new_tx = Transaction(
+            product_id=product_id,
+            warehouse_id=warehouse_id,
+            user_id=1,  # Assuming active admin user ID is 1
+            change_amount=actual_change,
+            transaction_type=transaction_type
+        )
+        db.session.add(new_tx)
+
+        # 2. Update inventory stock levels in the Stock table
+        stock_record = Stock.query.filter_by(product_id=product_id, warehouse_id=warehouse_id).first()
+        if stock_record:
+            stock_record.quantity += actual_change
+        else:
+            if transaction_type == 'INBOUND':
+                new_stock = Stock(product_id=product_id, warehouse_id=warehouse_id, quantity=change_amount)
+                db.session.add(new_stock)
+            else:
+                return "Error: Product does not exist in this warehouse stock!", 400
+
+        db.session.commit()
+        return redirect(url_for('reports'))
+
+    products = Product.query.all()
+    warehouses = Warehouse.query.all()
+    return render_template('add_transaction.html', products=products, warehouses=warehouses)
+
+
 @app.route('/products')
 def list_products():
     products = Product.query.all()
