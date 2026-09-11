@@ -48,5 +48,34 @@ def list_routes():
     return render_template('routes.html', routes=routes)
 
 
+@app.route('/reports')
+def reports():
+    total_products = Product.query.count()
+    total_warehouses = Warehouse.query.count()
+    total_suppliers = Supplier.query.count()
+    total_vehicles = Vehicle.query.count()
+    total_drivers = Driver.query.count()
+    total_routes = ShipmentRoute.query.count()
+    total_transactions = Transaction.query.count()
+    
+    stocks = Stock.query.all()
+    total_inventory_value = sum([stock.quantity * stock.product.price for stock in stocks])
+    
+    recent_transactions = Transaction.query.order_by(Transaction.id.desc()).all()
+
+    return render_template(
+        'reports.html',
+        total_products=total_products,
+        total_warehouses=total_warehouses,
+        total_suppliers=total_suppliers,
+        total_vehicles=total_vehicles,
+        total_drivers=total_drivers,
+        total_routes=total_routes,
+        total_transactions=total_transactions,
+        total_inventory_value=total_inventory_value,
+        transactions=recent_transactions
+    )
+
+
 if __name__ == '__main__':
     app.run(debug=True)
